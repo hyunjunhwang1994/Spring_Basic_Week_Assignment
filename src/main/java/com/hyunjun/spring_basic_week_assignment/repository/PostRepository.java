@@ -10,6 +10,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByOrderByModifiedAtDesc();
 
-
+    Post findByIdAndPassword(Long id, String password);
 
 }
