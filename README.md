@@ -7,6 +7,14 @@
 
 ### API 명세서
 
-![](https://hyunjunhwang1994.github.io/images/2022-12-26-17-42-21.png)
+![](https://hyunjunhwang1994.github.io/images/2022-12-27-16-27-19.png)
 
-![](https://hyunjunhwang1994.github.io/images/2022-12-26-17-42-32.png)
+<br>
+<br>
+
+![](https://hyunjunhwang1994.github.io/images/2022-12-27-16-27-31.png)
+
+<br>
+<br>
+
+![](https://hyunjunhwang1994.github.io/images/2022-12-27-16-27-44.png)
