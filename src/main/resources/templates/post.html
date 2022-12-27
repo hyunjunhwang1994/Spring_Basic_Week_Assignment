@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+<!--    <script th:inline="javascript">-->
+<script>
+
+        function postDelete(){
+
+                let password = $('#password').val();
+
+
+                let data = {
+                    'password' : password };
+
+                $.ajax({
+                    method: 'DELETE',
+                    url: "/api/post/[[${post.id}]]",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+
+                        result = response["result"]
+
+
+                        if (result == true) {
+
+                            alert('포스트가 성공적으로 삭제되었습니다.');
+                            window.location.href="/";
+
+                        }else{
+                            alert('비밀번호가 다릅니다.');
+                        }
+
+
+
+                    }
+                });
+        }
+
+
+
+        function postUpdate(){
+
+            let password = $('#password').val();
+
+
+
+            $('#postBox').empty();
+
+            let tempHtml = ``;
+
+            tempHtml += `
+<input type="text" id="title" name="title" value=[[${post.title}]] placeholder="title" >
+<input type="text" id="author" name="author" value=[[${post.author}]] placeholder="author" >
+<textarea id="contents" >[[${post.contents}]]</textarea>
+<button onclick="postUpdateRequest()">글 수정완료</button>
+`
+            $('#postBox').append(tempHtml);
+
+        }
+
+        function postUpdateRequest(){
+            // 1. 수정할 포스트를 불러옵니다.
+            let contents = $('#contents').val();
+            let title = $('#title').val();
+            let author = $('#author').val();
+            let password = $('#password').val();
+
+
+            // 2. 전달할 data JSON으로 만듭니다.
+            let data = {
+                'title' : title,
+                'contents': contents,
+                'author': author,
+            'password':password};
+
+            $.ajax({
+                type: "PUT",
+                url: "/api/post/[[${post.id}]]",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+
+
+
+                    if (!response) {
+                        alert('글이 존재하지 않거나, 비밀번호가 다릅니다.');
+                    }else{
+                        alert('포스트가 성공적으로 수정되었습니다.');
+                        window.location.href="/api/post/[[${post.id}]]";
+                    }
+
+                }
+            });
+        }
+
+
+
+
+
+
+    </script>
+
+    <style>
+
+
+    </style>
+</head>
+<body>
+
+
+
+
+<div>
+    <button onclick="postDelete()">글 삭제</button>
+    <button onclick="postUpdate()">글 수정하기</button>
+    <input type="password" id="password" name="password" placeholder="password">
+</div>
+
+
+<div id="postBox">
+
+
+
+<div id="postMeta">
+    <span>제목 : [[${post.title}]]</span>
+    <span>작성자 : [[${post.author}]]</span>
+</div>
+
+
+<div id="postContents">
+
+    [[${post.contents}]]
+
+</div>
+
+
+
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>블로그</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            getPosts();
+        })
+
+        function getPosts() {
+            $('#cards-box').empty();
+
+            $.ajax({
+                type: "GET",
+                url: "/api/posts",
+                data: {},
+                success: function (response) {
+                    for (let i = 0; i < response.length; i++) {
+                        let posts = response[i];
+                        let id = posts['id'];
+                        let title = posts['title']
+                        let author = posts['author'];
+                        let contents = posts['contents'];
+                        let createdAt = posts['createdAt'];
+                        addHTML(id, title, author, createdAt);
+                    }
+                }
+            });
+        }
+
+        function addHTML(id, title, author, contents, createdAt) {
+            let tempHtml = makePosts(id, title, author, contents, createdAt);
+            $('#post-card').append(tempHtml);
+        }
+
+        function makePosts(id, title, author, createdAt) {
+            return `
+                <tr>
+                    <td>${id}</td>
+                    <td><a href="/api/post/${id}">${title}</a></td>
+                    <td>${author}</td>
+                    <td>${createdAt}</td>
+                </tr>
+                `;
+        }
+
+
+
+    </script>
+
+
+<style>
+
+table, td, th {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 1200px;
+    margin: 0px auto 0px auto;
+}
+
+
+.wrapper {
+
+
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+
+}
+
+button{
+    margin: 0px auto 0px auto;
+}
+
+
+</style>
+
+</head>
+<body>
+
+<div class="wrapper">
+
+
+<table id="post-table" class="post-table">
+
+    <tbody id="post-card">
+
+    <tr id="post-row">
+        <th style="width: 100px;">글 번호</th>
+        <th style="width: 100px;">글 제목</th>
+        <th style="width: 100px;">글쓴이</th>
+        <th style="width: 300px;">작성 날짜</th>
+    </tr>
+
+    </tbody>
+</table>
+
+
+    <button style="width: 100px; height:50px;"onclick="location.href='/upload/post'">글 쓰기</button>
+
+
+</div>
+
+
+</body>
+</html>

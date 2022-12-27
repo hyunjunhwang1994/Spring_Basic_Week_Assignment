@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+    <script>
+
+
+        // 메모를 생성합니다.
+        function writePost() {
+            // 1. 작성한 메모를 불러옵니다.
+            let contents = $('#contents').val();
+            let title = $('#title').val();
+            let author = $('#author').val();
+            let password = $('#password').val();
+
+
+
+            // // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+            // if (isValidContents(contents) == false) {
+            //     return;
+            // }
+
+
+            // 4. 전달할 data JSON으로 만듭니다.
+            let data = {
+                'title' : title,
+                'contents': contents,
+                'author': author,
+                'password' : password };
+
+            $.ajax({
+                type: "POST",
+                url: "/api/post",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메시지가 성공적으로 작성되었습니다.');
+                    window.location.href="/"
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+
+<div class="area-write">
+
+    <div>
+        <input type="text" id="title" name="title" placeholder="title" >
+        <input type="text" id="author" name="author" placeholder="author" >
+        <input type="password" id="password" name="password" placeholder="password">
+    </div>
+
+
+
+    <div>
+        <textarea class="field" placeholder="contents" name="contents" th:id="contents" cols="30" rows="10"></textarea>
+
+
+    </div>
+
+
+
+    <button style="width: 100px; height:50px;" onclick="writePost()">글 등록</button>
+
+
+</div>
+
+
+</body>
+</html>
