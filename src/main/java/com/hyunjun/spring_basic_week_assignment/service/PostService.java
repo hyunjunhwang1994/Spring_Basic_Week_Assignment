@@ -74,7 +74,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public SelectPostShowDto readPost(Long id) {
+    public PostResponseDto readPost(Long id) {
 
         //        SelectPostShowDto selectPostShowDto = new SelectPostShowDto();
 
@@ -89,11 +89,13 @@ public class PostService {
         //        selectPostShowDto.setContents(post.getContents());
 
 
+
         ModelMapper modelMapper = new ModelMapper();
-        SelectPostShowDto selectPostShowDto = modelMapper.map(post, SelectPostShowDto.class);
+        PostResponseDto postResponseDto = modelMapper.map(post, PostResponseDto.class);
 
 
-        return selectPostShowDto;
+
+        return postResponseDto;
     }
 
 

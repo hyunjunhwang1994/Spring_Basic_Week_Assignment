@@ -9,6 +9,7 @@
     <script>
         $(document).ready(function () {
             getPosts();
+
         })
 
         function getPosts() {
@@ -41,7 +42,7 @@
             return `
                 <tr>
                     <td>${id}</td>
-                    <td><a href="/api/post/${id}">${title}</a></td>
+                    <td><a onclick="postPage(${id})">${title}</a></td>
                     <td>${author}</td>
                     <td>${createdAt}</td>
                 </tr>
@@ -49,8 +50,140 @@
         }
 
 
+        function postPage(id){
+
+
+
+            $.ajax({
+                type: "GET",
+                url: "/api/post/" + id,
+                data: {},
+                success: function (response) {
+
+                    $('#uploadPost').remove();
+                    $('#post-table').remove();
+
+                    let temp_html = ``;
+
+                    temp_html += `
+                    <h2 id="post_title">${response.title}</h2>
+                    <h3 id="post_author">${response.author}</h3>
+                    <p id="post_contents">${response.contents}</p>
+
+                    <div>
+    <button onclick="postDelete(${id})">글 삭제</button>
+    <button onclick="postUpdate(${id})">글 수정하기</button>
+    <input type="password" id="password" name="password" placeholder="password">
+</div>
+                        `;
+
+
+
+                    $('#wrapper').append(temp_html);
+                }
+            });
+
+
+        }
+
+
+
+
+            function postDelete(id){
+
+            let password = $('#password').val();
+
+
+
+            let data = {
+            'password' : password };
+
+            $.ajax({
+            method: 'DELETE',
+            url: "/api/post/" + id ,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (response) {
+
+            result = response["result"]
+
+
+            if (result == true) {
+
+            alert('포스트가 성공적으로 삭제되었습니다.');
+            window.location.href="/";
+
+        }else{
+            alert('비밀번호가 다릅니다.');
+        }
+
+
+
+        }
+        });
+        }
+
+
+
+            function postUpdate(id){
+
+            let password = $('#password').val();
+
+            $('#postBox').empty();
+
+            let tempHtml = ``;
+
+            tempHtml += `
+<input type="text" id="title" name="title" value=` + $('#post_title').text() + ` placeholder="title" >
+<input type="text" id="author" name="author" value=`  + $('#post_author').text() + ` placeholder="author" >
+<textarea id="contents" >`+ $('#post_contents').text()+ `</textarea>
+<button onclick="postUpdateRequest(${id})">글 수정완료</button>
+`
+            $('#postBox').append(tempHtml);
+
+        }
+
+            function postUpdateRequest(id){
+            // 1. 수정할 포스트를 불러옵니다.
+            let contents = $('#contents').val();
+            let title = $('#title').val();
+            let author = $('#author').val();
+            let password = $('#password').val();
+
+
+            // 2. 전달할 data JSON으로 만듭니다.
+            let data = {
+            'title' : title,
+            'contents': contents,
+            'author': author,
+            'password':password};
+
+            $.ajax({
+            type: "PUT",
+            url: "/api/post/"+id,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (response) {
+
+
+
+            if (!response) {
+            alert('글이 존재하지 않거나, 비밀번호가 다릅니다.');
+
+        }else{
+            alert('포스트가 성공적으로 수정되었습니다.');
+                location.reload();
+        }
+
+        }
+        });
+        }
+
+
 
     </script>
+
+
 
 
 <style>
@@ -84,7 +217,7 @@ button{
 </head>
 <body>
 
-<div class="wrapper">
+<div class="wrapper" id="wrapper">
 
 
 <table id="post-table" class="post-table">
@@ -102,8 +235,12 @@ button{
 </table>
 
 
-    <button style="width: 100px; height:50px;"onclick="location.href='/upload/post'">글 쓰기</button>
+    <button id="uploadPost" style="width: 100px; height:50px;"onclick="location.href='/upload/post'">글 쓰기</button>
 
+
+</div>
+
+<div id="postBox">
 
 </div>
 

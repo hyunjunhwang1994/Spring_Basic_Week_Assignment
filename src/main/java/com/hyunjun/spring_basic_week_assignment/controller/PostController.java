@@ -29,6 +29,7 @@ public class PostController {
     }
 
 
+    // 전체 글 확인 -> 글쓰기 화면으로 넘어가기 위한 컨트롤러
     @GetMapping("/upload/post")
     public ModelAndView uploadPost() {
         ModelAndView modelAndView = new ModelAndView();
@@ -57,19 +58,20 @@ public class PostController {
 
     // 선택 글 조회
     @GetMapping("/api/post/{id}")
-    public ModelAndView readPost(@PathVariable Long id) {
+    public PostResponseDto readPost(@PathVariable Long id) {
 
-        SelectPostShowDto selectPostShowDto = postService.readPost(id);
+//        SelectPostShowDto selectPostShowDto = postService.readPost(id);
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("post");
+//        modelAndView.addObject(selectPostShowDto);
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("post");
+        PostResponseDto postResponseDto = postService.readPost(id);
 
-
-        modelAndView.addObject(selectPostShowDto);
-
-        return modelAndView;
-
+        return postResponseDto;
     }
+
+
+
 
     // 선택 글 삭제 (비밀번호 매칭)
     @DeleteMapping("/api/post/{id}")

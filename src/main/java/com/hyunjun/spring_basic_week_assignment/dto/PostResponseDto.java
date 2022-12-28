@@ -5,10 +5,12 @@ import com.hyunjun.spring_basic_week_assignment.entity.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class PostResponseDto {
 
