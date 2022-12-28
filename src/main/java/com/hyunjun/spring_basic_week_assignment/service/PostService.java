@@ -2,12 +2,17 @@ package com.hyunjun.spring_basic_week_assignment.service;
 
 
 import com.hyunjun.spring_basic_week_assignment.dto.PostRequestDto;
+import com.hyunjun.spring_basic_week_assignment.dto.PostResponseDto;
+import com.hyunjun.spring_basic_week_assignment.dto.SelectPostShowDto;
 import com.hyunjun.spring_basic_week_assignment.entity.Post;
 import com.hyunjun.spring_basic_week_assignment.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,18 +24,32 @@ public class PostService {
 
 
     @Transactional
-    public Post createPost(PostRequestDto requestDto) {
+    public PostResponseDto createPost(PostRequestDto requestDto) {
 
         Post post = new Post(requestDto);
         postRepository.save(post);
-        return post;
+
+        PostResponseDto postResponseDto = new PostResponseDto(post);
+
+        return postResponseDto;
     }
 
 
     @Transactional(readOnly = true)
-    public List<Post> getPosts() {
+    public List<PostResponseDto> getPosts() {
 
-        return postRepository.findAllByOrderByModifiedAtDesc();
+        List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
+
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+        for (Post post : postList) {
+            PostResponseDto postResponseDto = new PostResponseDto(post);
+            postResponseDtoList.add(postResponseDto);
+
+        }
+
+
+        return postResponseDtoList;
 
     }
 
@@ -55,41 +74,54 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Post readPost(Long id) {
+    public SelectPostShowDto readPost(Long id) {
+
+        //        SelectPostShowDto selectPostShowDto = new SelectPostShowDto();
+
+
 
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 글이 존재하지 않습니다.")
         );
+        //        selectPostShowDto.setId(post.getId());
+        //        selectPostShowDto.setTitle(post.getTitle());
+        //        selectPostShowDto.setAuthor(post.getAuthor());
+        //        selectPostShowDto.setContents(post.getContents());
 
 
+        ModelMapper modelMapper = new ModelMapper();
+        SelectPostShowDto selectPostShowDto = modelMapper.map(post, SelectPostShowDto.class);
 
-        return post;
+
+        return selectPostShowDto;
     }
 
 
 
 
     @Transactional
-    public Post updatePost(Long id, PostRequestDto requestDto) {
+    public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
+
+        // Entity <- DTO
+        // Post post = requestDto.toEntity();
 
 
         // 해당 글과 글과 비밀번호가 매칭되는지 확인
         Post post = postRepository.findByIdAndPassword(id, requestDto.getPassword());
 
+
         // 매칭된다면
         if(post != null){
-
+            // Dirty Checking을 이용하여 업데이트
             post.updatePost(requestDto);
 
-            return post;
-        }else{
+            // DTO <- Entity
+            PostResponseDto postResponseDto = new PostResponseDto(post);
 
+            return postResponseDto;
+        }else{
             return null;
         }
-
-
-
-
     }
 
 

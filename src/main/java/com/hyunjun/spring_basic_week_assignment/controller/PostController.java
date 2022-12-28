@@ -3,6 +3,8 @@ package com.hyunjun.spring_basic_week_assignment.controller;
 
 import com.hyunjun.spring_basic_week_assignment.dto.PostDeleteResultDto;
 import com.hyunjun.spring_basic_week_assignment.dto.PostRequestDto;
+import com.hyunjun.spring_basic_week_assignment.dto.PostResponseDto;
+import com.hyunjun.spring_basic_week_assignment.dto.SelectPostShowDto;
 import com.hyunjun.spring_basic_week_assignment.entity.Post;
 import com.hyunjun.spring_basic_week_assignment.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class PostController {
 
     // 글 입력
     @PostMapping("/api/post")
-    public Post createPost(@RequestBody PostRequestDto requestDto) {
+    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto) {
 
 
         return postService.createPost(requestDto);
@@ -45,7 +47,10 @@ public class PostController {
 
     // 전체 글 조회
     @GetMapping("/api/posts")
-    public List<Post> getPosts() {
+    public List<PostResponseDto> getPosts() {
+
+
+
         return postService.getPosts();
     }
 
@@ -54,9 +59,13 @@ public class PostController {
     @GetMapping("/api/post/{id}")
     public ModelAndView readPost(@PathVariable Long id) {
 
+        SelectPostShowDto selectPostShowDto = postService.readPost(id);
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("post");
-        modelAndView.addObject(postService.readPost(id));
+
+
+        modelAndView.addObject(selectPostShowDto);
 
         return modelAndView;
 
@@ -70,8 +79,6 @@ public class PostController {
         boolean result = postService.deletePost(id, requestDto.getPassword());
 
         if(result == true){
-
-
             return new PostDeleteResultDto(true);
         }else{
             return new PostDeleteResultDto(false);
@@ -82,12 +89,18 @@ public class PostController {
 
     // 선택 글 수정
     @PutMapping("/api/post/{id}")
-    public Post updatePost(@PathVariable long id, @RequestBody PostRequestDto requestDto) {
+    public PostResponseDto updatePost(@PathVariable long id, @RequestBody PostRequestDto requestDto) {
+
+        PostResponseDto postResponseDto = postService.updatePost(id, requestDto);
 
 
-        return postService.updatePost(id, requestDto);
-
-
+        return postResponseDto;
     }
+
+
+
+
+
+
 
 }

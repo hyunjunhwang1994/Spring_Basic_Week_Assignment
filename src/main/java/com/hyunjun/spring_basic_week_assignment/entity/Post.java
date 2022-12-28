@@ -2,6 +2,7 @@ package com.hyunjun.spring_basic_week_assignment.entity;
 
 
 import com.hyunjun.spring_basic_week_assignment.dto.PostRequestDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +31,16 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String password;
 
+
+    @Builder
+    public Post(Long id, String title, String contents, String author, String password) {
+        this.id = id;
+        this.title = title;
+        this.contents = contents;
+        this.author = author;
+        this.password = password;
+    }
+
     public Post(PostRequestDto requestDto) {
 
         this.title = requestDto.getTitle();
@@ -43,5 +54,6 @@ public class Post extends Timestamped {
         this.contents = requestDto.getContents();
         this.author = requestDto.getAuthor();
     }
+
 
 }

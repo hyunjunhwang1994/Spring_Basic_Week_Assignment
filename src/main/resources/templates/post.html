@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -11,6 +12,8 @@
 <!--    <script th:inline="javascript">-->
 <script>
 
+
+
         function postDelete(){
 
                 let password = $('#password').val();
@@ -21,7 +24,7 @@
 
                 $.ajax({
                     method: 'DELETE',
-                    url: "/api/post/[[${post.id}]]",
+                    url: "/api/post/[[${selectPostShowDto.id}]]",
                     contentType: "application/json",
                     data: JSON.stringify(data),
                     success: function (response) {
@@ -50,16 +53,14 @@
 
             let password = $('#password').val();
 
-
-
             $('#postBox').empty();
 
             let tempHtml = ``;
 
             tempHtml += `
-<input type="text" id="title" name="title" value=[[${post.title}]] placeholder="title" >
-<input type="text" id="author" name="author" value=[[${post.author}]] placeholder="author" >
-<textarea id="contents" >[[${post.contents}]]</textarea>
+<input type="text" id="title" name="title" value=[[${selectPostShowDto.title}]] placeholder="title" >
+<input type="text" id="author" name="author" value=[[${selectPostShowDto.author}]] placeholder="author" >
+<textarea id="contents" >[[${selectPostShowDto.contents}]]</textarea>
 <button onclick="postUpdateRequest()">글 수정완료</button>
 `
             $('#postBox').append(tempHtml);
@@ -83,7 +84,7 @@
 
             $.ajax({
                 type: "PUT",
-                url: "/api/post/[[${post.id}]]",
+                url: "/api/post/[[${selectPostShowDto.id}]]",
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
@@ -94,7 +95,7 @@
                         alert('글이 존재하지 않거나, 비밀번호가 다릅니다.');
                     }else{
                         alert('포스트가 성공적으로 수정되었습니다.');
-                        window.location.href="/api/post/[[${post.id}]]";
+                        window.location.href="/api/post/[[${selectPostShowDto.id}]]";
                     }
 
                 }
@@ -102,16 +103,8 @@
         }
 
 
-
-
-
-
     </script>
 
-    <style>
-
-
-    </style>
 </head>
 <body>
 
@@ -130,14 +123,14 @@
 
 
 <div id="postMeta">
-    <span>제목 : [[${post.title}]]</span>
-    <span>작성자 : [[${post.author}]]</span>
+    <span>제목 : [[${selectPostShowDto.title}]]</span>
+    <span>작성자 : [[${selectPostShowDto.author}]]</span>
 </div>
 
 
 <div id="postContents">
 
-    [[${post.contents}]]
+    [[${selectPostShowDto.contents}]]
 
 </div>
 

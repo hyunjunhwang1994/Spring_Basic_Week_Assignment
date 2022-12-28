@@ -13,4 +13,5 @@ public class PostDeleteResultDto {
   boolean result;
 
 
+
 }
